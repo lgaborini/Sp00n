@@ -1,0 +1,58 @@
+---
+title: "Report"
+author: "Lorenzo Gaborini"
+date: "`r Sys.Date()`"
+output: 
+  html_document:
+     theme: readable
+     df_print: kable
+     toc: yes
+---
+
+```{r setup, include=FALSE}
+
+suppressMessages(library(tidyverse))
+library(stringr)
+library(fs)
+
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Collect all files
+
+```{r}
+dir_data <- "C:\\Work\\UNIL_locale\\Spoon\\Exercise 3\\cases"
+all_files <- dir_info(path = dir_data, all = TRUE, recursive = TRUE)
+df.files <- all_files %>% 
+   mutate(basepath = dirname(path), 
+          filename = basename(path),
+          case = path %>% path_split() %>% map_chr(~ .x[which(.x == 'cases') + 1])
+   )
+```
+
+## SQLite
+
+
+All SQLite databases:
+```{r}
+regex_sqlite <- '\\.sqlite(3|db)?$'
+df.sqlite <- df.files %>% filter(str_detect(filename, regex_sqlite))
+```
+
+Sizes and database types:
+```{r}
+df.sqlite <- df.sqlite %>% 
+   select(filename, size, case) %>% 
+   group_by(filename) %>% 
+   mutate(groupId = str_replace(filename, paste0('(.*?)', regex_sqlite), '\\1'))
+
+df.sqlite
+```
+
+### Grab tables
+
+```{r}
+library(DBI)
+mydb <- dbConnect(RSQLite::SQLite(), "my-db.sqlite")
+
+```
