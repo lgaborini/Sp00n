@@ -21,7 +21,7 @@ knitr::opts_chunk$set(echo = TRUE)
 ## Collect all files
 
 ```{r}
-dir_data <- "C:\\Work\\UNIL_locale\\Spoon\\Exercise 3\\cases"
+dir_data <- "C:\\Work\\UNIL_locale\\Sp00n\\Exercise 3\\cases"
 all_files <- dir_info(path = dir_data, all = TRUE, recursive = TRUE)
 df.files <- all_files %>% 
    mutate(basepath = dirname(path), 
@@ -35,24 +35,25 @@ df.files <- all_files %>%
 
 All SQLite databases:
 ```{r}
-regex_sqlite <- '\\.sqlite(3|db)?$'
+regex_sqlite <- '\\.(sql|sqlite3?|db)?$'
 df.sqlite <- df.files %>% filter(str_detect(filename, regex_sqlite))
 ```
 
 Sizes and database types:
 ```{r}
 df.sqlite <- df.sqlite %>% 
-   select(filename, size, case) %>% 
    group_by(filename) %>% 
    mutate(groupId = str_replace(filename, paste0('(.*?)', regex_sqlite), '\\1'))
 
-df.sqlite
+df.sqlite %>% select(filename, size, case, groupId) %>% arrange(desc(size), case, groupId)
 ```
 
 ### Grab tables
 
 ```{r}
-library(DBI)
-mydb <- dbConnect(RSQLite::SQLite(), "my-db.sqlite")
+path_target_db <- df.sqlite %>% filter(groupId == 'Photos') %>% pull(path) %>% .[1]
 
+library(DBI)
+con <- dbConnect(RSQLite::SQLite(), path_target_db)
+df.tables <- as.data.frame(dbListTables(con))
 ```
