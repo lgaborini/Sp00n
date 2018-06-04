@@ -24,25 +24,52 @@
 <link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
 <script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
 <script src="site_libs/navigation-1.1/tabsets.js"></script>
-<link href="site_libs/highlightjs-9.12.0/default.css" rel="stylesheet" />
-<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+<link href="site_libs/font-awesome-4.5.0/css/font-awesome.min.css" rel="stylesheet" />
+
 
 <style type="text/css">code{white-space: pre;}</style>
+<style type="text/css">
+div.sourceCode { overflow-x: auto; }
+table.sourceCode, tr.sourceCode, td.lineNumbers, td.sourceCode {
+  margin: 0; padding: 0; vertical-align: baseline; border: none; }
+table.sourceCode { width: 100%; line-height: 100%; }
+td.lineNumbers { text-align: right; padding-right: 4px; padding-left: 4px; color: #aaaaaa; border-right: 1px solid #aaaaaa; }
+td.sourceCode { padding-left: 5px; }
+code > span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code > span.dt { color: #902000; } /* DataType */
+code > span.dv { color: #40a070; } /* DecVal */
+code > span.bn { color: #40a070; } /* BaseN */
+code > span.fl { color: #40a070; } /* Float */
+code > span.ch { color: #4070a0; } /* Char */
+code > span.st { color: #4070a0; } /* String */
+code > span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code > span.ot { color: #007020; } /* Other */
+code > span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code > span.fu { color: #06287e; } /* Function */
+code > span.er { color: #ff0000; font-weight: bold; } /* Error */
+code > span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+code > span.cn { color: #880000; } /* Constant */
+code > span.sc { color: #4070a0; } /* SpecialChar */
+code > span.vs { color: #4070a0; } /* VerbatimString */
+code > span.ss { color: #bb6688; } /* SpecialString */
+code > span.im { } /* Import */
+code > span.va { color: #19177c; } /* Variable */
+code > span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code > span.op { color: #666666; } /* Operator */
+code > span.bu { } /* BuiltIn */
+code > span.ex { } /* Extension */
+code > span.pp { color: #bc7a00; } /* Preprocessor */
+code > span.at { color: #7d9029; } /* Attribute */
+code > span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code > span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code > span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+</style>
 <style type="text/css">
   pre:not([class]) {
     background-color: white;
   }
 </style>
-<script type="text/javascript">
-if (window.hljs) {
-  hljs.configure({languages: []});
-  hljs.initHighlightingOnLoad();
-  if (document.readyState && document.readyState === "complete") {
-    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
-  }
-}
-</script>
-
 
 
 <style type="text/css">
@@ -72,6 +99,7 @@ h6 {
 }
 </style>
 
+<link rel="stylesheet" href="assets\custom.css" type="text/css" />
 
 </head>
 
@@ -186,7 +214,7 @@ $(document).ready(function ()  {
       ignoreSelector: ".toc-ignore",
       scrollTo: 0
     };
-    options.showAndHide = true;
+    options.showAndHide = false;
     options.smoothScroll = true;
 
     // tocify
@@ -249,6 +277,12 @@ div.tocify {
   border-radius: 0px;
 }
 
+.tocify-subheader {
+  display: inline;
+}
+.tocify-subheader .tocify-item {
+  font-size: 0.95em;
+}
 
 </style>
 
@@ -272,7 +306,7 @@ div.tocify {
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
-      <a class="navbar-brand" href="index.html">My Website</a>
+      <a class="navbar-brand" href="index.html"></a>
     </div>
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
@@ -287,7 +321,13 @@ div.tocify {
 </li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
-        
+        <li>
+  <a href="https://github.com/lgaborini/Sp00n-project">
+    <span class="fa fa-github"></span>
+     
+    Repo
+  </a>
+</li>
       </ul>
     </div><!--/.nav-collapse -->
   </div><!--/.container -->
@@ -305,25 +345,25 @@ div.tocify {
 
 <div id="collect-all-files" class="section level2">
 <h2>Collect all files</h2>
-<pre class="r"><code>dir_data &lt;- &quot;C:\\Work\\UNIL_locale\\Sp00n\\Exercise 3\\cases&quot;
-all_files &lt;- dir_info(path = dir_data, all = TRUE, recursive = TRUE)
-df.files &lt;- all_files %&gt;% 
-   mutate(basepath = dirname(path), 
-          filename = basename(path),
-          extraction = path %&gt;% path_split() %&gt;% map_chr(~ .x[which(.x == &#39;cases&#39;) + 1])
-   )</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">dir_data &lt;-<span class="st"> &quot;C:</span><span class="ch">\\</span><span class="st">Work</span><span class="ch">\\</span><span class="st">UNIL_locale</span><span class="ch">\\</span><span class="st">Sp00n</span><span class="ch">\\</span><span class="st">Exercise 3</span><span class="ch">\\</span><span class="st">cases&quot;</span>
+all_files &lt;-<span class="st"> </span><span class="kw">dir_info</span>(<span class="dt">path =</span> dir_data, <span class="dt">all =</span> <span class="ot">TRUE</span>, <span class="dt">recursive =</span> <span class="ot">TRUE</span>)
+df.files &lt;-<span class="st"> </span>all_files <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">   </span><span class="kw">mutate</span>(<span class="dt">basepath =</span> <span class="kw">dirname</span>(path), 
+          <span class="dt">filename =</span> <span class="kw">basename</span>(path),
+          <span class="dt">extraction =</span> path <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">path_split</span>() <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">map_chr</span>(<span class="op">~</span><span class="st"> </span>.x[<span class="kw">which</span>(.x <span class="op">==</span><span class="st"> &#39;cases&#39;</span>) <span class="op">+</span><span class="st"> </span><span class="dv">1</span>])
+   )</code></pre></div>
 <p>4202 files in directory.</p>
 <div id="sqlite-databases" class="section level3">
 <h3>SQLite databases</h3>
 <p>All SQLite databases:</p>
-<pre class="r"><code>regex_sqlite &lt;- &#39;\\.(sql|sqlite3?|db)?$&#39;
-df.sqlite &lt;- df.files %&gt;% filter(str_detect(filename, regex_sqlite))</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">regex_sqlite &lt;-<span class="st"> &#39;</span><span class="ch">\\</span><span class="st">.(sql|sqlite3?|db)?$&#39;</span>
+df.sqlite &lt;-<span class="st"> </span>df.files <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">filter</span>(<span class="kw">str_detect</span>(filename, regex_sqlite))</code></pre></div>
 <p>Sizes and database types:</p>
-<pre class="r"><code>df.sqlite &lt;- df.sqlite %&gt;% 
-   group_by(filename) %&gt;% 
-   mutate(dbType = str_replace(filename, paste0(&#39;(.*?)&#39;, regex_sqlite), &#39;\\1&#39;))
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">df.sqlite &lt;-<span class="st"> </span>df.sqlite <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">   </span><span class="kw">group_by</span>(filename) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">   </span><span class="kw">mutate</span>(<span class="dt">dbType =</span> <span class="kw">str_replace</span>(filename, <span class="kw">paste0</span>(<span class="st">&#39;(.*?)&#39;</span>, regex_sqlite), <span class="st">&#39;</span><span class="ch">\\</span><span class="st">1&#39;</span>))
 
-df.sqlite %&gt;% select(extraction, filename, size, dbType) %&gt;% arrange(desc(size), extraction, dbType)</code></pre>
+df.sqlite <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">select</span>(extraction, filename, size, dbType) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">arrange</span>(<span class="kw">desc</span>(size), extraction, dbType)</code></pre></div>
 <div class="kable-table">
 <table>
 <thead>
@@ -813,7 +853,7 @@ df.sqlite %&gt;% select(extraction, filename, size, dbType) %&gt;% arrange(desc(
 </table>
 </div>
 <p>Save to data directory:</p>
-<pre class="r"><code>saveRDS(df.sqlite, file = &#39;data/df_sqlite.rds&#39;)</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">saveRDS</span>(df.sqlite, <span class="dt">file =</span> <span class="st">&#39;data/df_sqlite.rds&#39;</span>)</code></pre></div>
 </div>
 </div>
 
