@@ -1,24 +1,20 @@
 ---
-title: "Report"
-author: "Lorenzo Gaborini"
+title: "Data collection"
 date: "`r Sys.Date()`"
-output: 
-  html_document:
-     theme: readable
-     df_print: kable
-     toc: yes
 ---
 
 ```{r setup, include=FALSE}
 
+source('preamble.R')
+
 suppressMessages(library(tidyverse))
 library(stringr)
 library(fs)
-
-knitr::opts_chunk$set(echo = TRUE)
 ```
 
 ## Collect all files
+
+
 
 ```{r}
 dir_data <- "C:\\Work\\UNIL_locale\\Sp00n\\Exercise 3\\cases"
@@ -26,15 +22,19 @@ all_files <- dir_info(path = dir_data, all = TRUE, recursive = TRUE)
 df.files <- all_files %>% 
    mutate(basepath = dirname(path), 
           filename = basename(path),
-          case = path %>% path_split() %>% map_chr(~ .x[which(.x == 'cases') + 1])
+          extraction = path %>% path_split() %>% map_chr(~ .x[which(.x == 'cases') + 1])
    )
 ```
 
-## SQLite
+`r nrow(df.files)` files in directory.
+
+
+
+### SQLite databases
 
 
 All SQLite databases:
-```{r}
+```{r db-find}
 regex_sqlite <- '\\.(sql|sqlite3?|db)?$'
 df.sqlite <- df.files %>% filter(str_detect(filename, regex_sqlite))
 ```
@@ -43,17 +43,16 @@ Sizes and database types:
 ```{r}
 df.sqlite <- df.sqlite %>% 
    group_by(filename) %>% 
-   mutate(groupId = str_replace(filename, paste0('(.*?)', regex_sqlite), '\\1'))
+   mutate(dbType = str_replace(filename, paste0('(.*?)', regex_sqlite), '\\1'))
 
-df.sqlite %>% select(filename, size, case, groupId) %>% arrange(desc(size), case, groupId)
+df.sqlite %>% select(extraction, filename, size, dbType) %>% arrange(desc(size), extraction, dbType)
 ```
 
-### Grab tables
+Save to data directory:
+```{r db-export}
+saveRDS(df.sqlite, file = 'data/df_sqlite.rds')
 
-```{r}
-path_target_db <- df.sqlite %>% filter(groupId == 'Photos') %>% pull(path) %>% .[1]
-
-library(DBI)
-con <- dbConnect(RSQLite::SQLite(), path_target_db)
-df.tables <- as.data.frame(dbListTables(con))
 ```
+
+
+

@@ -1,0 +1,210 @@
+---
+title: "Health data"
+date: "`r Sys.Date()`"
+---
+
+```{r setup, include=FALSE}
+source('preamble.R')
+
+suppressMessages(library(tidyverse))
+library(glue)
+library(stringr)
+library(lubridate)
+```
+
+## Data loading
+
+Load SQLite databases:
+```{r db-load}
+df.sqplite <- readRDS(file = 'data/df_sqlite.rds')
+
+# Database init tools
+library(DBI)
+sqlite_make_connection <- function(path) { dbConnect(RSQLite::SQLite(), path) }
+
+```
+
+
+## Misfit
+
+```{r misfit-import}
+df.misfit <- df.sqlite %>% filter(str_detect(filename, 'a_SportsData_Iwown'))
+
+# Use only first extraction (the other is identical)
+con <- sqlite_make_connection(df.misfit$path[1])
+list.tables <- dbListTables(con)
+list.tables
+
+```
+
+### V3_sleep_data
+
+Using only `v3_sleep_data`: pre-processing
+
+```{r sleep-v3-preprocessing}
+df.v3_sleep_data <- dbReadTable(con, 'V3_sleep_data')
+
+# Adding some factors
+df.v3_sleep_data <- df.v3_sleep_data %>% 
+   mutate(sleep_type = factor(sleep_type))
+
+# Adding time references
+df.v3_sleep_data <- df.v3_sleep_data %>% 
+   mutate(
+      datetime_day = glue::glue('{year}-{month}-{day}') %>% ymd(),
+      datetime_start = datetime_day + dminutes(start_time),
+      datetime_end = datetime_day + dminutes(end_time) + ddays(ifelse(end_time < start_time, 1, 0))
+   )
+df.v3_sleep_data %>% head
+
+```
+
+### Sleep distribution
+
+Sleep distribution w/ type, per row:
+```{r sleep-segments}
+
+df.v3_sleep_data %>% 
+   filter(year == 2017) %>% 
+   ggplot() + 
+   geom_segment(aes(x = ID, y = datetime_start, xend = ID, yend = datetime_end, col = sleep_type), lwd = 2)
+```
+
+Guess: 
+
+- `sleep_type = 5`: awake
+- `sleep_type = 2`: not awake
+
+Sleep characteristics:
+
+```{r}
+df.v3_sleep_data %>% 
+   group_by(datetime_day, sleep_type) %>% 
+   mutate(duration_segment = datetime_end - datetime_start) %>% 
+   summarize(total_duration = sum(duration_segment)) %>% 
+   filter(year(datetime_day) == 2017) %>%
+   ggplot() +
+   geom_col(aes(x = as.character(datetime_day), y = total_duration / dhours(1), fill = factor(sleep_type)), 
+            position = 'dodge') +
+   labs(x = 'Date', y = 'Duration [h]') + coord_cartesian(ylim = c(0, 12), expand = FALSE)
+   
+```
+
+
+
+## Prometheus
+
+Locate the DB(s):
+
+```{r prometheus-find}
+df.prometheus <- df.sqlite %>% filter(str_detect(filename, 'Prometheus'))
+nrow(df.prometheus)
+
+```
+
+### Difference between extractions
+
+Let's analyze first `ZS2ACTIVITYSESSION` tables:
+```{r prometheus-init}
+# Open connections
+con.left <- sqlite_make_connection(df.prometheus$path[1])
+con.right <- sqlite_make_connection(df.prometheus$path[2])
+df.prometheus.act.left <- dbReadTable(con.left, 'ZS2ACTIVITYSESSION')
+df.prometheus.act.right <- dbReadTable(con.right, 'ZS2ACTIVITYSESSION')
+dbDisconnect(con.left)
+dbDisconnect(con.right)
+
+```
+
+The extractions are different!
+
+```{r prometheus-diff}
+df.prometheus.act.left %>% dim
+df.prometheus.act.right %>% dim
+
+df.prometheus.act.right %>% colnames() %>% setdiff(df.prometheus.act.left %>% colnames())
+
+```
+
+Common contents:
+
+```{r prometheus-diff-show}
+diff.prometheus <- all_equal(
+   df.prometheus.act.left %>% as.tibble() %>% select(-ZREQUESTCHANGEDVALUES), 
+   df.prometheus.act.right %>% as.tibble() %>% select(one_of(colnames(df.prometheus.act.left)), -ZREQUESTCHANGEDVALUES),
+   ignore_row_order = TRUE, ignore_col_order = TRUE, conver = TRUE
+)
+diff.prometheus
+
+# "Rows in x but not y: 51, 53, 50, 52, 49. Rows in y but not x: 58, 59, 60, 57, 61. "
+
+idx.unique.left <- c(51, 53, 50, 52, 49)
+idx.unique.right <- c(58, 59, 60, 57, 61)
+df.prometheus.act.left %>% as.tibble() %>% select(-ZREQUESTCHANGEDVALUES)
+```
+
+Notice: same DB, only PK changes!
+
+### Activities
+
+We consider only `df.prometheus.act.left`.    
+It should contain step data.
+
+A brief summary:
+```{r}
+df.prometheus.act.left %>% head
+```
+
+Some pre-processing:
+```{r}
+# Adding some factors
+df.prometheus.act.left <- df.prometheus.act.left %>% 
+   mutate(ZACTIVITYTYPE = factor(ZACTIVITYTYPE))
+```
+
+
+
+Column `ZSTARTTIME` is a timestamp, attempt to convert to time:
+```{r}
+df.prometheus.act.left %>% 
+   mutate(datetime_start = as.POSIXct(ZSTARTTIME, origin = '1970-01-01'),
+          datetime_end = datetime_start + dseconds(ZDURATION)) %>% 
+   select(ZDATEYYYYMMDD, ZSTARTTIME, datetime_start, ZDURATION, datetime_end) %>% 
+   head(10)
+```
+
+
+It seems ok! (Perhaps we need to adjust for time zones.)   
+Save this:    
+```{r}
+df.prometheus.act.left <- df.prometheus.act.left %>% 
+   mutate(datetime_start = as.POSIXct(ZSTARTTIME, origin = '1970-01-01'),
+          datetime_end = datetime_start + dseconds(ZDURATION))
+```
+
+
+
+Activities:
+```{r}
+df.prometheus.act.left %>% 
+   mutate(datetime = ZDATEYYYYMMDD %>% ymd()) %>% 
+   ggplot() + 
+   geom_point(aes(x = datetime, y = dseconds(ZDURATION) / dminutes(1), col = ZACTIVITYTYPE)) + 
+   labs(x = 'Date', y = 'Duration [min]')
+   
+```
+
+As segments:
+
+```{r}
+df.prometheus.act.left %>% 
+   ggplot() +
+      geom_segment(aes(x = ymd(ZDATEYYYYMMDD), 
+        xend = ymd(ZDATEYYYYMMDD), 
+        y = datetime_start %>% POSIX_strip(origin = '1970-01-01'), 
+        yend = datetime_end %>% POSIX_strip(origin = '1970-01-01'), 
+        col = ZACTIVITYTYPE), lwd = 2) +
+   scale_y_datetime(date_labels = '%H:%M') +
+   labs(x = 'Date', y = 'Time of the day')
+```
+
