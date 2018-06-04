@@ -1,0 +1,850 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<meta charset="utf-8" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+
+
+
+<meta name="date" content="2018-06-04" />
+
+<title>Data collection</title>
+
+<script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/readable.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<script src="site_libs/jqueryui-1.11.4/jquery-ui.min.js"></script>
+<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<link href="site_libs/highlightjs-9.12.0/default.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css">
+  pre:not([class]) {
+    background-color: white;
+  }
+</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+<style type="text/css">
+h1 {
+  font-size: 34px;
+}
+h1.title {
+  font-size: 38px;
+}
+h2 {
+  font-size: 30px;
+}
+h3 {
+  font-size: 24px;
+}
+h4 {
+  font-size: 18px;
+}
+h5 {
+  font-size: 16px;
+}
+h6 {
+  font-size: 12px;
+}
+.table th:not([align]) {
+  text-align: left;
+}
+</style>
+
+
+</head>
+
+<body>
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+code {
+  color: inherit;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+img {
+  max-width:100%;
+  height: auto;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+</style>
+
+
+<style type="text/css">
+/* padding for bootstrap navbar */
+body {
+  padding-top: 66px;
+  padding-bottom: 40px;
+}
+/* offset scroll position for anchor links (for fixed navbar)  */
+.section h1 {
+  padding-top: 71px;
+  margin-top: -71px;
+}
+
+.section h2 {
+  padding-top: 71px;
+  margin-top: -71px;
+}
+.section h3 {
+  padding-top: 71px;
+  margin-top: -71px;
+}
+.section h4 {
+  padding-top: 71px;
+  margin-top: -71px;
+}
+.section h5 {
+  padding-top: 71px;
+  margin-top: -71px;
+}
+.section h6 {
+  padding-top: 71px;
+  margin-top: -71px;
+}
+</style>
+
+<script>
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark it active
+  menuAnchor.parent().addClass('active');
+
+  // if it's got a parent navbar menu mark it active as well
+  menuAnchor.closest('li.dropdown').addClass('active');
+});
+</script>
+
+
+<div class="container-fluid main-container">
+
+<!-- tabsets -->
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+</script>
+
+<!-- code folding -->
+
+
+
+
+<script>
+$(document).ready(function ()  {
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_').toLowerCase();
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = true;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
+
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+  padding-left: 25px;
+  text-indent: 0;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+
+</style>
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row-fluid">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">My Website</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="index.html">Index</a>
+</li>
+<li>
+  <a href="1_collect_data.html">Data collection</a>
+</li>
+<li>
+  <a href="2_health_data.html">Health data</a>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div class="fluid-row" id="header">
+
+
+
+<h1 class="title toc-ignore">Data collection</h1>
+<h4 class="date"><em>2018-06-04</em></h4>
+
+</div>
+
+
+<div id="collect-all-files" class="section level2">
+<h2>Collect all files</h2>
+<pre class="r"><code>dir_data &lt;- &quot;C:\\Work\\UNIL_locale\\Sp00n\\Exercise 3\\cases&quot;
+all_files &lt;- dir_info(path = dir_data, all = TRUE, recursive = TRUE)
+df.files &lt;- all_files %&gt;% 
+   mutate(basepath = dirname(path), 
+          filename = basename(path),
+          case = path %&gt;% path_split() %&gt;% map_chr(~ .x[which(.x == &#39;cases&#39;) + 1])
+   )</code></pre>
+<div id="sqlite-databases" class="section level3">
+<h3>SQLite databases</h3>
+<p>All SQLite databases:</p>
+<pre class="r"><code>regex_sqlite &lt;- &#39;\\.(sql|sqlite3?|db)?$&#39;
+df.sqlite &lt;- df.files %&gt;% filter(str_detect(filename, regex_sqlite))</code></pre>
+<p>Sizes and database types:</p>
+<pre class="r"><code>df.sqlite &lt;- df.sqlite %&gt;% 
+   group_by(filename) %&gt;% 
+   mutate(groupId = str_replace(filename, paste0(&#39;(.*?)&#39;, regex_sqlite), &#39;\\1&#39;))
+
+df.sqlite %&gt;% select(filename, size, case, groupId) %&gt;% arrange(desc(size), case, groupId)</code></pre>
+<div class="kable-table">
+<table>
+<thead>
+<tr class="header">
+<th align="left">filename</th>
+<th align="right">size</th>
+<th align="left">case</th>
+<th align="left">groupId</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">Photos_1.sqlite</td>
+<td align="right">1.11M</td>
+<td align="left">2017-05-17.17-43-55</td>
+<td align="left">Photos_1</td>
+</tr>
+<tr class="even">
+<td align="left">Photos.sqlite</td>
+<td align="right">1.11M</td>
+<td align="left">2017-05-17.19-18-30</td>
+<td align="left">Photos</td>
+</tr>
+<tr class="odd">
+<td align="left">Photos.sqlite</td>
+<td align="right">1.05M</td>
+<td align="left">2017-05-17.17-43-55</td>
+<td align="left">Photos</td>
+</tr>
+<tr class="even">
+<td align="left">Photos_1.sqlite</td>
+<td align="right">1.05M</td>
+<td align="left">2017-05-17.19-18-30</td>
+<td align="left">Photos_1</td>
+</tr>
+<tr class="odd">
+<td align="left">Prometheus.sqlite</td>
+<td align="right">1.05M</td>
+<td align="left">2017-05-17.17-43-55</td>
+<td align="left">Prometheus</td>
+</tr>
+<tr class="even">
+<td align="left">Prometheus.sqlite</td>
+<td align="right">1.05M</td>
+<td align="left">2017-05-17.19-18-30</td>
+<td align="left">Prometheus</td>
+</tr>
+<tr class="odd">
+<td align="left">Manifest.db</td>
+<td align="right">1.04M</td>
+<td align="left">2017-05-17.17-43-55</td>
+<td align="left">Manifest</td>
+</tr>
+<tr class="even">
+<td align="left">Manifest.db</td>
+<td align="right">1.04M</td>
+<td align="left">2017-05-17.19-18-30</td>
+<td align="left">Manifest</td>
+</tr>
+<tr class="odd">
+<td align="left">BrowserState.db</td>
+<td align="right">348K</td>
+<td align="left">2017-05-17.17-43-55</td>
+<td align="left">BrowserState</td>
+</tr>
+<tr class="even">
+<td align="left">BrowserState.db</td>
+<td align="right">348K</td>
+<td align="left">2017-05-17.19-18-30</td>
+<td align="left">BrowserState</td>
+</tr>
+<tr class="odd">
+<td align="left">applicationState.db</td>
+<td align="right">228K</td>
+<td align="left">2017-05-17.17-43-55</td>
+<td align="left">applicationState</td>
+</tr>
+<tr class="even">
+<td align="left">applicationState.db</td>
+<td align="right">228K</td>
+<td align="left">2017-05-17.19-18-30</td>
+<td align="left">applicationState</td>
+</tr>
+<tr class="odd">
+<td align="left">sms.db</td>
+<td align="right">204K</td>
+<td align="left">2017-05-17.17-43-55</td>
+<td align="left">sms</td>
+</tr>
+<tr class="even">
+<td align="left">sms.db</td>
+<td align="right">204K</td>
+<td align="left">2017-05-17.19-18-30</td>
+<td align="left">sms</td>
+</tr>
+<tr class="odd">
+<td align="left">NoteStore.sqlite</td>
+<td align="right">188K</td>
+<td align="left">2017-05-17.17-43-55</td>
+<td align="left">NoteStore</td>
+</tr>
+<tr class="even">
+<td align="left">NoteStore.sqlite</td>
+<td align="right">188K</td>
+<td align="left">2017-05-17.19-18-30</td>
+<td align="left">NoteStore</td>
+</tr>
+<tr class="odd">
+<td align="left">Accounts3.sqlite</td>
+<td align="right">180K</td>
+<td align="left">2017-05-17.17-43-55</td>
+<td align="left">Accounts3</td>
+</tr>
+<tr class="even">
+<td align="left">Accounts3.sqlite</td>
+<td align="right">180K</td>
+<td align="left">2017-05-17.19-18-30</td>
+<td align="left">Accounts3</td>
+</tr>
+<tr class="odd">
+<td align="left">Thumbs.db</td>
+<td align="right">164K</td>
+<td align="left">2017-05-17.17-43-55</td>
+<td align="left">Thumbs</td>
+</tr>
+<tr class="even">
+<td align="left">DataUsage.sqlite</td>
+<td align="right">108K</td>
+<td align="left">2017-05-17.17-43-55</td>
+<td align="left">DataUsage</td>
+</tr>
+<tr class="odd">
+<td align="left">DataUsage.sqlite</td>
+<td align="right">108K</td>
+<td align="left">2017-05-17.19-18-30</td>
+<td align="left">DataUsage</td>
+</tr>
+<tr class="even">
+<td align="left">a_SportsData_Iwown.sqlite</td>
+<td align="right">96K</td>
+<td align="left">2017-05-17.17-43-55</td>
+<td align="left">a_SportsData_Iwown</td>
+</tr>
+<tr class="odd">
+<td align="left">a_SportsData_Iwown.sqlite</td>
+<td align="right">96K</td>
+<td align="left">2017-05-17.19-18-30</td>
+<td align="left">a_SportsData_Iwown</td>
+</tr>
+<tr class="even">
+<td align="left">__hs_campaigns_db.sql</td>
+<td align="right">92K</td>
+<td align="left">2017-05-17.19-18-30</td>
+<td align="left">__hs_campaigns_db</td>
+</tr>
+<tr class="odd">
+<td align="left">notes.sqlite</td>
+<td align="right">88K</td>
+<td align="left">2017-05-17.17-43-55</td>
+<td align="left">notes</td>
+</tr>
+<tr class="even">
+<td align="left">notes.sqlite</td>
+<td align="right">88K</td>
+<td align="left">2017-05-17.19-18-30</td>
+<td align="left">notes</td>
+</tr>
+<tr class="odd">
+<td align="left">__hs_campaigns_db.sql</td>
+<td align="right">84K</td>
+<td align="left">2017-05-17.17-43-55</td>
+<td align="left">__hs_campaigns_db</td>
+</tr>
+<tr class="even">
+<td align="left">History.db</td>
+<td align="right">80K</td>
+<td align="left">2017-05-17.17-43-55</td>
+<td align="left">History</td>
+</tr>
+<tr class="odd">
+<td align="left">History.db</td>
+<td align="right">80K</td>
+<td align="left">2017-05-17.19-18-30</td>
+<td align="left">History</td>
+</tr>
+<tr class="even">
+<td align="left">Bookmarks.db</td>
+<td align="right">72K</td>
+<td align="left">2017-05-17.17-43-55</td>
+<td align="left">Bookmarks</td>
+</tr>
+<tr class="odd">
+<td align="left">Bookmarks.db</td>
+<td align="right">72K</td>
+<td align="left">2017-05-17.19-18-30</td>
+<td align="left">Bookmarks</td>
+</tr>
+<tr class="even">
+<td align="left">psi.sqlite</td>
+<td align="right">68K</td>
+<td align="left">2017-05-17.17-43-55</td>
+<td align="left">psi</td>
+</tr>
+<tr class="odd">
+<td align="left">psi.sqlite</td>
+<td align="right">68K</td>
+<td align="left">2017-05-17.19-18-30</td>
+<td align="left">psi</td>
+</tr>
+<tr class="even">
+<td align="left">CLSBusinessCategoryCache.sqlite</td>
+<td align="right">60K</td>
+<td align="left">2017-05-17.17-43-55</td>
+<td align="left">CLSBusinessCategoryCache</td>
+</tr>
+<tr class="odd">
+<td align="left">CLSBusinessCategoryCache.sqlite</td>
+<td align="right">60K</td>
+<td align="left">2017-05-17.19-18-30</td>
+<td align="left">CLSBusinessCategoryCache</td>
+</tr>
+<tr class="even">
+<td align="left">TCC.db</td>
+<td align="right">56K</td>
+<td align="left">2017-05-17.17-43-55</td>
+<td align="left">TCC</td>
+</tr>
+<tr class="odd">
+<td align="left">TCC.db</td>
+<td align="right">56K</td>
+<td align="left">2017-05-17.19-18-30</td>
+<td align="left">TCC</td>
+</tr>
+<tr class="even">
+<td align="left">CLSLocationCache.sqlite</td>
+<td align="right">52K</td>
+<td align="left">2017-05-17.17-43-55</td>
+<td align="left">CLSLocationCache</td>
+</tr>
+<tr class="odd">
+<td align="left">gyroCal.db</td>
+<td align="right">52K</td>
+<td align="left">2017-05-17.17-43-55</td>
+<td align="left">gyroCal</td>
+</tr>
+<tr class="even">
+<td align="left">CLSLocationCache.sqlite</td>
+<td align="right">52K</td>
+<td align="left">2017-05-17.19-18-30</td>
+<td align="left">CLSLocationCache</td>
+</tr>
+<tr class="odd">
+<td align="left">gyroCal.db</td>
+<td align="right">52K</td>
+<td align="left">2017-05-17.19-18-30</td>
+<td align="left">gyroCal</td>
+</tr>
+<tr class="even">
+<td align="left">consolidated.db</td>
+<td align="right">48K</td>
+<td align="left">2017-05-17.17-43-55</td>
+<td align="left">consolidated</td>
+</tr>
+<tr class="odd">
+<td align="left">consolidated.db</td>
+<td align="right">48K</td>
+<td align="left">2017-05-17.19-18-30</td>
+<td align="left">consolidated</td>
+</tr>
+<tr class="even">
+<td align="left">CellularUsage.db</td>
+<td align="right">44K</td>
+<td align="left">2017-05-17.17-43-55</td>
+<td align="left">CellularUsage</td>
+</tr>
+<tr class="odd">
+<td align="left">CloudUserDictionary.sqlite</td>
+<td align="right">44K</td>
+<td align="left">2017-05-17.17-43-55</td>
+<td align="left">CloudUserDictionary</td>
+</tr>
+<tr class="even">
+<td align="left">CellularUsage.db</td>
+<td align="right">44K</td>
+<td align="left">2017-05-17.19-18-30</td>
+<td align="left">CellularUsage</td>
+</tr>
+<tr class="odd">
+<td align="left">CloudUserDictionary.sqlite</td>
+<td align="right">44K</td>
+<td align="left">2017-05-17.19-18-30</td>
+<td align="left">CloudUserDictionary</td>
+</tr>
+<tr class="even">
+<td align="left">Thumbs.db</td>
+<td align="right">41K</td>
+<td align="left">2017-05-17.19-18-30</td>
+<td align="left">Thumbs</td>
+</tr>
+<tr class="odd">
+<td align="left">mediaanalysis.db</td>
+<td align="right">40K</td>
+<td align="left">2017-05-17.19-18-30</td>
+<td align="left">mediaanalysis</td>
+</tr>
+<tr class="even">
+<td align="left">Recordings.db</td>
+<td align="right">36K</td>
+<td align="left">2017-05-17.17-43-55</td>
+<td align="left">Recordings</td>
+</tr>
+<tr class="odd">
+<td align="left">Recordings_1.db</td>
+<td align="right">36K</td>
+<td align="left">2017-05-17.17-43-55</td>
+<td align="left">Recordings_1</td>
+</tr>
+<tr class="even">
+<td align="left">Recordings.db</td>
+<td align="right">36K</td>
+<td align="left">2017-05-17.19-18-30</td>
+<td align="left">Recordings</td>
+</tr>
+<tr class="odd">
+<td align="left">Extras.db</td>
+<td align="right">32K</td>
+<td align="left">2017-05-17.17-43-55</td>
+<td align="left">Extras</td>
+</tr>
+<tr class="even">
+<td align="left">mediaanalysis.db</td>
+<td align="right">32K</td>
+<td align="left">2017-05-17.17-43-55</td>
+<td align="left">mediaanalysis</td>
+</tr>
+<tr class="odd">
+<td align="left">mediaanalysis_1.db</td>
+<td align="right">32K</td>
+<td align="left">2017-05-17.17-43-55</td>
+<td align="left">mediaanalysis_1</td>
+</tr>
+<tr class="even">
+<td align="left">Notifications.db</td>
+<td align="right">32K</td>
+<td align="left">2017-05-17.17-43-55</td>
+<td align="left">Notifications</td>
+</tr>
+<tr class="odd">
+<td align="left">Extras.db</td>
+<td align="right">32K</td>
+<td align="left">2017-05-17.19-18-30</td>
+<td align="left">Extras</td>
+</tr>
+<tr class="even">
+<td align="left">mediaanalysis_1.db</td>
+<td align="right">32K</td>
+<td align="left">2017-05-17.19-18-30</td>
+<td align="left">mediaanalysis_1</td>
+</tr>
+<tr class="odd">
+<td align="left">Notifications.db</td>
+<td align="right">32K</td>
+<td align="left">2017-05-17.19-18-30</td>
+<td align="left">Notifications</td>
+</tr>
+<tr class="even">
+<td align="left">HelpshiftIssuesDb.sql</td>
+<td align="right">28K</td>
+<td align="left">2017-05-17.17-43-55</td>
+<td align="left">HelpshiftIssuesDb</td>
+</tr>
+<tr class="odd">
+<td align="left">voicemail.db</td>
+<td align="right">28K</td>
+<td align="left">2017-05-17.17-43-55</td>
+<td align="left">voicemail</td>
+</tr>
+<tr class="even">
+<td align="left">HelpshiftIssuesDb.sql</td>
+<td align="right">28K</td>
+<td align="left">2017-05-17.19-18-30</td>
+<td align="left">HelpshiftIssuesDb</td>
+</tr>
+<tr class="odd">
+<td align="left">voicemail.db</td>
+<td align="right">28K</td>
+<td align="left">2017-05-17.19-18-30</td>
+<td align="left">voicemail</td>
+</tr>
+<tr class="even">
+<td align="left">cache.db</td>
+<td align="right">20K</td>
+<td align="left">2017-05-17.17-43-55</td>
+<td align="left">cache</td>
+</tr>
+<tr class="odd">
+<td align="left">HelpshiftFaqsDb.sql</td>
+<td align="right">20K</td>
+<td align="left">2017-05-17.17-43-55</td>
+<td align="left">HelpshiftFaqsDb</td>
+</tr>
+<tr class="even">
+<td align="left">cache.db</td>
+<td align="right">20K</td>
+<td align="left">2017-05-17.19-18-30</td>
+<td align="left">cache</td>
+</tr>
+<tr class="odd">
+<td align="left">HelpshiftFaqsDb.sql</td>
+<td align="right">20K</td>
+<td align="left">2017-05-17.19-18-30</td>
+<td align="left">HelpshiftFaqsDb</td>
+</tr>
+<tr class="even">
+<td align="left">com.apple.MobileBluetooth.ledevices.other.db</td>
+<td align="right">16K</td>
+<td align="left">2017-05-17.17-43-55</td>
+<td align="left">com.apple.MobileBluetooth.ledevices.other</td>
+</tr>
+<tr class="odd">
+<td align="left">com.apple.MobileBluetooth.ledevices.paired.db</td>
+<td align="right">16K</td>
+<td align="left">2017-05-17.17-43-55</td>
+<td align="left">com.apple.MobileBluetooth.ledevices.paired</td>
+</tr>
+<tr class="even">
+<td align="left">TrustStore.sqlite3</td>
+<td align="right">16K</td>
+<td align="left">2017-05-17.17-43-55</td>
+<td align="left">TrustStore</td>
+</tr>
+<tr class="odd">
+<td align="left">com.apple.MobileBluetooth.ledevices.other.db</td>
+<td align="right">16K</td>
+<td align="left">2017-05-17.19-18-30</td>
+<td align="left">com.apple.MobileBluetooth.ledevices.other</td>
+</tr>
+<tr class="even">
+<td align="left">com.apple.MobileBluetooth.ledevices.paired.db</td>
+<td align="right">16K</td>
+<td align="left">2017-05-17.19-18-30</td>
+<td align="left">com.apple.MobileBluetooth.ledevices.paired</td>
+</tr>
+<tr class="odd">
+<td align="left">TrustStore.sqlite3</td>
+<td align="right">16K</td>
+<td align="left">2017-05-17.19-18-30</td>
+<td align="left">TrustStore</td>
+</tr>
+<tr class="even">
+<td align="left">StorageTracker.db</td>
+<td align="right">12K</td>
+<td align="left">2017-05-17.17-43-55</td>
+<td align="left">StorageTracker</td>
+</tr>
+<tr class="odd">
+<td align="left">StorageTracker.db</td>
+<td align="right">12K</td>
+<td align="left">2017-05-17.19-18-30</td>
+<td align="left">StorageTracker</td>
+</tr>
+<tr class="even">
+<td align="left">AutoFillCorrections.db</td>
+<td align="right">4K</td>
+<td align="left">2017-05-17.17-43-55</td>
+<td align="left">AutoFillCorrections</td>
+</tr>
+<tr class="odd">
+<td align="left">PGCurationCache.sqlite</td>
+<td align="right">4K</td>
+<td align="left">2017-05-17.17-43-55</td>
+<td align="left">PGCurationCache</td>
+</tr>
+<tr class="even">
+<td align="left">AutoFillCorrections.db</td>
+<td align="right">4K</td>
+<td align="left">2017-05-17.19-18-30</td>
+<td align="left">AutoFillCorrections</td>
+</tr>
+<tr class="odd">
+<td align="left">PGCurationCache.sqlite</td>
+<td align="right">4K</td>
+<td align="left">2017-05-17.19-18-30</td>
+<td align="left">PGCurationCache</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>Save to data directory:</p>
+<pre class="r"><code>saveRDS(df.sqlite, file = &#39;data/df_sqlite.rds&#39;)</code></pre>
+</div>
+</div>
+
+
+
+</div>
+</div>
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>
