@@ -310,8 +310,9 @@ all_files &lt;- dir_info(path = dir_data, all = TRUE, recursive = TRUE)
 df.files &lt;- all_files %&gt;% 
    mutate(basepath = dirname(path), 
           filename = basename(path),
-          case = path %&gt;% path_split() %&gt;% map_chr(~ .x[which(.x == &#39;cases&#39;) + 1])
+          extraction = path %&gt;% path_split() %&gt;% map_chr(~ .x[which(.x == &#39;cases&#39;) + 1])
    )</code></pre>
+<p>4202 files in directory.</p>
 <div id="sqlite-databases" class="section level3">
 <h3>SQLite databases</h3>
 <p>All SQLite databases:</p>
@@ -320,492 +321,492 @@ df.sqlite &lt;- df.files %&gt;% filter(str_detect(filename, regex_sqlite))</code
 <p>Sizes and database types:</p>
 <pre class="r"><code>df.sqlite &lt;- df.sqlite %&gt;% 
    group_by(filename) %&gt;% 
-   mutate(groupId = str_replace(filename, paste0(&#39;(.*?)&#39;, regex_sqlite), &#39;\\1&#39;))
+   mutate(dbType = str_replace(filename, paste0(&#39;(.*?)&#39;, regex_sqlite), &#39;\\1&#39;))
 
-df.sqlite %&gt;% select(filename, size, case, groupId) %&gt;% arrange(desc(size), case, groupId)</code></pre>
+df.sqlite %&gt;% select(extraction, filename, size, dbType) %&gt;% arrange(desc(size), extraction, dbType)</code></pre>
 <div class="kable-table">
 <table>
 <thead>
 <tr class="header">
+<th align="left">extraction</th>
 <th align="left">filename</th>
 <th align="right">size</th>
-<th align="left">case</th>
-<th align="left">groupId</th>
+<th align="left">dbType</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
+<td align="left">2017-05-17.17-43-55</td>
 <td align="left">Photos_1.sqlite</td>
 <td align="right">1.11M</td>
-<td align="left">2017-05-17.17-43-55</td>
 <td align="left">Photos_1</td>
 </tr>
 <tr class="even">
+<td align="left">2017-05-17.19-18-30</td>
 <td align="left">Photos.sqlite</td>
 <td align="right">1.11M</td>
-<td align="left">2017-05-17.19-18-30</td>
 <td align="left">Photos</td>
 </tr>
 <tr class="odd">
+<td align="left">2017-05-17.17-43-55</td>
 <td align="left">Photos.sqlite</td>
 <td align="right">1.05M</td>
-<td align="left">2017-05-17.17-43-55</td>
 <td align="left">Photos</td>
 </tr>
 <tr class="even">
+<td align="left">2017-05-17.19-18-30</td>
 <td align="left">Photos_1.sqlite</td>
 <td align="right">1.05M</td>
-<td align="left">2017-05-17.19-18-30</td>
 <td align="left">Photos_1</td>
 </tr>
 <tr class="odd">
+<td align="left">2017-05-17.17-43-55</td>
 <td align="left">Prometheus.sqlite</td>
 <td align="right">1.05M</td>
-<td align="left">2017-05-17.17-43-55</td>
 <td align="left">Prometheus</td>
 </tr>
 <tr class="even">
+<td align="left">2017-05-17.19-18-30</td>
 <td align="left">Prometheus.sqlite</td>
 <td align="right">1.05M</td>
-<td align="left">2017-05-17.19-18-30</td>
 <td align="left">Prometheus</td>
 </tr>
 <tr class="odd">
+<td align="left">2017-05-17.17-43-55</td>
 <td align="left">Manifest.db</td>
 <td align="right">1.04M</td>
-<td align="left">2017-05-17.17-43-55</td>
 <td align="left">Manifest</td>
 </tr>
 <tr class="even">
+<td align="left">2017-05-17.19-18-30</td>
 <td align="left">Manifest.db</td>
 <td align="right">1.04M</td>
-<td align="left">2017-05-17.19-18-30</td>
 <td align="left">Manifest</td>
 </tr>
 <tr class="odd">
+<td align="left">2017-05-17.17-43-55</td>
 <td align="left">BrowserState.db</td>
 <td align="right">348K</td>
-<td align="left">2017-05-17.17-43-55</td>
 <td align="left">BrowserState</td>
 </tr>
 <tr class="even">
+<td align="left">2017-05-17.19-18-30</td>
 <td align="left">BrowserState.db</td>
 <td align="right">348K</td>
-<td align="left">2017-05-17.19-18-30</td>
 <td align="left">BrowserState</td>
 </tr>
 <tr class="odd">
+<td align="left">2017-05-17.17-43-55</td>
 <td align="left">applicationState.db</td>
 <td align="right">228K</td>
-<td align="left">2017-05-17.17-43-55</td>
 <td align="left">applicationState</td>
 </tr>
 <tr class="even">
+<td align="left">2017-05-17.19-18-30</td>
 <td align="left">applicationState.db</td>
 <td align="right">228K</td>
-<td align="left">2017-05-17.19-18-30</td>
 <td align="left">applicationState</td>
 </tr>
 <tr class="odd">
+<td align="left">2017-05-17.17-43-55</td>
 <td align="left">sms.db</td>
 <td align="right">204K</td>
-<td align="left">2017-05-17.17-43-55</td>
 <td align="left">sms</td>
 </tr>
 <tr class="even">
+<td align="left">2017-05-17.19-18-30</td>
 <td align="left">sms.db</td>
 <td align="right">204K</td>
-<td align="left">2017-05-17.19-18-30</td>
 <td align="left">sms</td>
 </tr>
 <tr class="odd">
+<td align="left">2017-05-17.17-43-55</td>
 <td align="left">NoteStore.sqlite</td>
 <td align="right">188K</td>
-<td align="left">2017-05-17.17-43-55</td>
 <td align="left">NoteStore</td>
 </tr>
 <tr class="even">
+<td align="left">2017-05-17.19-18-30</td>
 <td align="left">NoteStore.sqlite</td>
 <td align="right">188K</td>
-<td align="left">2017-05-17.19-18-30</td>
 <td align="left">NoteStore</td>
 </tr>
 <tr class="odd">
+<td align="left">2017-05-17.17-43-55</td>
 <td align="left">Accounts3.sqlite</td>
 <td align="right">180K</td>
-<td align="left">2017-05-17.17-43-55</td>
 <td align="left">Accounts3</td>
 </tr>
 <tr class="even">
+<td align="left">2017-05-17.19-18-30</td>
 <td align="left">Accounts3.sqlite</td>
 <td align="right">180K</td>
-<td align="left">2017-05-17.19-18-30</td>
 <td align="left">Accounts3</td>
 </tr>
 <tr class="odd">
+<td align="left">2017-05-17.17-43-55</td>
 <td align="left">Thumbs.db</td>
 <td align="right">164K</td>
-<td align="left">2017-05-17.17-43-55</td>
 <td align="left">Thumbs</td>
 </tr>
 <tr class="even">
+<td align="left">2017-05-17.17-43-55</td>
 <td align="left">DataUsage.sqlite</td>
 <td align="right">108K</td>
-<td align="left">2017-05-17.17-43-55</td>
 <td align="left">DataUsage</td>
 </tr>
 <tr class="odd">
+<td align="left">2017-05-17.19-18-30</td>
 <td align="left">DataUsage.sqlite</td>
 <td align="right">108K</td>
-<td align="left">2017-05-17.19-18-30</td>
 <td align="left">DataUsage</td>
 </tr>
 <tr class="even">
+<td align="left">2017-05-17.17-43-55</td>
 <td align="left">a_SportsData_Iwown.sqlite</td>
 <td align="right">96K</td>
-<td align="left">2017-05-17.17-43-55</td>
 <td align="left">a_SportsData_Iwown</td>
 </tr>
 <tr class="odd">
+<td align="left">2017-05-17.19-18-30</td>
 <td align="left">a_SportsData_Iwown.sqlite</td>
 <td align="right">96K</td>
-<td align="left">2017-05-17.19-18-30</td>
 <td align="left">a_SportsData_Iwown</td>
 </tr>
 <tr class="even">
+<td align="left">2017-05-17.19-18-30</td>
 <td align="left">__hs_campaigns_db.sql</td>
 <td align="right">92K</td>
-<td align="left">2017-05-17.19-18-30</td>
 <td align="left">__hs_campaigns_db</td>
 </tr>
 <tr class="odd">
+<td align="left">2017-05-17.17-43-55</td>
 <td align="left">notes.sqlite</td>
 <td align="right">88K</td>
-<td align="left">2017-05-17.17-43-55</td>
 <td align="left">notes</td>
 </tr>
 <tr class="even">
+<td align="left">2017-05-17.19-18-30</td>
 <td align="left">notes.sqlite</td>
 <td align="right">88K</td>
-<td align="left">2017-05-17.19-18-30</td>
 <td align="left">notes</td>
 </tr>
 <tr class="odd">
+<td align="left">2017-05-17.17-43-55</td>
 <td align="left">__hs_campaigns_db.sql</td>
 <td align="right">84K</td>
-<td align="left">2017-05-17.17-43-55</td>
 <td align="left">__hs_campaigns_db</td>
 </tr>
 <tr class="even">
+<td align="left">2017-05-17.17-43-55</td>
 <td align="left">History.db</td>
 <td align="right">80K</td>
-<td align="left">2017-05-17.17-43-55</td>
 <td align="left">History</td>
 </tr>
 <tr class="odd">
+<td align="left">2017-05-17.19-18-30</td>
 <td align="left">History.db</td>
 <td align="right">80K</td>
-<td align="left">2017-05-17.19-18-30</td>
 <td align="left">History</td>
 </tr>
 <tr class="even">
+<td align="left">2017-05-17.17-43-55</td>
 <td align="left">Bookmarks.db</td>
 <td align="right">72K</td>
-<td align="left">2017-05-17.17-43-55</td>
 <td align="left">Bookmarks</td>
 </tr>
 <tr class="odd">
+<td align="left">2017-05-17.19-18-30</td>
 <td align="left">Bookmarks.db</td>
 <td align="right">72K</td>
-<td align="left">2017-05-17.19-18-30</td>
 <td align="left">Bookmarks</td>
 </tr>
 <tr class="even">
+<td align="left">2017-05-17.17-43-55</td>
 <td align="left">psi.sqlite</td>
 <td align="right">68K</td>
-<td align="left">2017-05-17.17-43-55</td>
 <td align="left">psi</td>
 </tr>
 <tr class="odd">
+<td align="left">2017-05-17.19-18-30</td>
 <td align="left">psi.sqlite</td>
 <td align="right">68K</td>
-<td align="left">2017-05-17.19-18-30</td>
 <td align="left">psi</td>
 </tr>
 <tr class="even">
+<td align="left">2017-05-17.17-43-55</td>
 <td align="left">CLSBusinessCategoryCache.sqlite</td>
 <td align="right">60K</td>
-<td align="left">2017-05-17.17-43-55</td>
 <td align="left">CLSBusinessCategoryCache</td>
 </tr>
 <tr class="odd">
+<td align="left">2017-05-17.19-18-30</td>
 <td align="left">CLSBusinessCategoryCache.sqlite</td>
 <td align="right">60K</td>
-<td align="left">2017-05-17.19-18-30</td>
 <td align="left">CLSBusinessCategoryCache</td>
 </tr>
 <tr class="even">
+<td align="left">2017-05-17.17-43-55</td>
 <td align="left">TCC.db</td>
 <td align="right">56K</td>
-<td align="left">2017-05-17.17-43-55</td>
 <td align="left">TCC</td>
 </tr>
 <tr class="odd">
+<td align="left">2017-05-17.19-18-30</td>
 <td align="left">TCC.db</td>
 <td align="right">56K</td>
-<td align="left">2017-05-17.19-18-30</td>
 <td align="left">TCC</td>
 </tr>
 <tr class="even">
+<td align="left">2017-05-17.17-43-55</td>
 <td align="left">CLSLocationCache.sqlite</td>
 <td align="right">52K</td>
-<td align="left">2017-05-17.17-43-55</td>
 <td align="left">CLSLocationCache</td>
 </tr>
 <tr class="odd">
+<td align="left">2017-05-17.17-43-55</td>
 <td align="left">gyroCal.db</td>
 <td align="right">52K</td>
-<td align="left">2017-05-17.17-43-55</td>
 <td align="left">gyroCal</td>
 </tr>
 <tr class="even">
+<td align="left">2017-05-17.19-18-30</td>
 <td align="left">CLSLocationCache.sqlite</td>
 <td align="right">52K</td>
-<td align="left">2017-05-17.19-18-30</td>
 <td align="left">CLSLocationCache</td>
 </tr>
 <tr class="odd">
+<td align="left">2017-05-17.19-18-30</td>
 <td align="left">gyroCal.db</td>
 <td align="right">52K</td>
-<td align="left">2017-05-17.19-18-30</td>
 <td align="left">gyroCal</td>
 </tr>
 <tr class="even">
+<td align="left">2017-05-17.17-43-55</td>
 <td align="left">consolidated.db</td>
 <td align="right">48K</td>
-<td align="left">2017-05-17.17-43-55</td>
 <td align="left">consolidated</td>
 </tr>
 <tr class="odd">
+<td align="left">2017-05-17.19-18-30</td>
 <td align="left">consolidated.db</td>
 <td align="right">48K</td>
-<td align="left">2017-05-17.19-18-30</td>
 <td align="left">consolidated</td>
 </tr>
 <tr class="even">
+<td align="left">2017-05-17.17-43-55</td>
 <td align="left">CellularUsage.db</td>
 <td align="right">44K</td>
-<td align="left">2017-05-17.17-43-55</td>
 <td align="left">CellularUsage</td>
 </tr>
 <tr class="odd">
+<td align="left">2017-05-17.17-43-55</td>
 <td align="left">CloudUserDictionary.sqlite</td>
 <td align="right">44K</td>
-<td align="left">2017-05-17.17-43-55</td>
 <td align="left">CloudUserDictionary</td>
 </tr>
 <tr class="even">
+<td align="left">2017-05-17.19-18-30</td>
 <td align="left">CellularUsage.db</td>
 <td align="right">44K</td>
-<td align="left">2017-05-17.19-18-30</td>
 <td align="left">CellularUsage</td>
 </tr>
 <tr class="odd">
+<td align="left">2017-05-17.19-18-30</td>
 <td align="left">CloudUserDictionary.sqlite</td>
 <td align="right">44K</td>
-<td align="left">2017-05-17.19-18-30</td>
 <td align="left">CloudUserDictionary</td>
 </tr>
 <tr class="even">
+<td align="left">2017-05-17.19-18-30</td>
 <td align="left">Thumbs.db</td>
 <td align="right">41K</td>
-<td align="left">2017-05-17.19-18-30</td>
 <td align="left">Thumbs</td>
 </tr>
 <tr class="odd">
+<td align="left">2017-05-17.19-18-30</td>
 <td align="left">mediaanalysis.db</td>
 <td align="right">40K</td>
-<td align="left">2017-05-17.19-18-30</td>
 <td align="left">mediaanalysis</td>
 </tr>
 <tr class="even">
+<td align="left">2017-05-17.17-43-55</td>
 <td align="left">Recordings.db</td>
 <td align="right">36K</td>
-<td align="left">2017-05-17.17-43-55</td>
 <td align="left">Recordings</td>
 </tr>
 <tr class="odd">
+<td align="left">2017-05-17.17-43-55</td>
 <td align="left">Recordings_1.db</td>
 <td align="right">36K</td>
-<td align="left">2017-05-17.17-43-55</td>
 <td align="left">Recordings_1</td>
 </tr>
 <tr class="even">
+<td align="left">2017-05-17.19-18-30</td>
 <td align="left">Recordings.db</td>
 <td align="right">36K</td>
-<td align="left">2017-05-17.19-18-30</td>
 <td align="left">Recordings</td>
 </tr>
 <tr class="odd">
+<td align="left">2017-05-17.17-43-55</td>
 <td align="left">Extras.db</td>
 <td align="right">32K</td>
-<td align="left">2017-05-17.17-43-55</td>
 <td align="left">Extras</td>
 </tr>
 <tr class="even">
+<td align="left">2017-05-17.17-43-55</td>
 <td align="left">mediaanalysis.db</td>
 <td align="right">32K</td>
-<td align="left">2017-05-17.17-43-55</td>
 <td align="left">mediaanalysis</td>
 </tr>
 <tr class="odd">
+<td align="left">2017-05-17.17-43-55</td>
 <td align="left">mediaanalysis_1.db</td>
 <td align="right">32K</td>
-<td align="left">2017-05-17.17-43-55</td>
 <td align="left">mediaanalysis_1</td>
 </tr>
 <tr class="even">
+<td align="left">2017-05-17.17-43-55</td>
 <td align="left">Notifications.db</td>
 <td align="right">32K</td>
-<td align="left">2017-05-17.17-43-55</td>
 <td align="left">Notifications</td>
 </tr>
 <tr class="odd">
+<td align="left">2017-05-17.19-18-30</td>
 <td align="left">Extras.db</td>
 <td align="right">32K</td>
-<td align="left">2017-05-17.19-18-30</td>
 <td align="left">Extras</td>
 </tr>
 <tr class="even">
+<td align="left">2017-05-17.19-18-30</td>
 <td align="left">mediaanalysis_1.db</td>
 <td align="right">32K</td>
-<td align="left">2017-05-17.19-18-30</td>
 <td align="left">mediaanalysis_1</td>
 </tr>
 <tr class="odd">
+<td align="left">2017-05-17.19-18-30</td>
 <td align="left">Notifications.db</td>
 <td align="right">32K</td>
-<td align="left">2017-05-17.19-18-30</td>
 <td align="left">Notifications</td>
 </tr>
 <tr class="even">
+<td align="left">2017-05-17.17-43-55</td>
 <td align="left">HelpshiftIssuesDb.sql</td>
 <td align="right">28K</td>
-<td align="left">2017-05-17.17-43-55</td>
 <td align="left">HelpshiftIssuesDb</td>
 </tr>
 <tr class="odd">
+<td align="left">2017-05-17.17-43-55</td>
 <td align="left">voicemail.db</td>
 <td align="right">28K</td>
-<td align="left">2017-05-17.17-43-55</td>
 <td align="left">voicemail</td>
 </tr>
 <tr class="even">
+<td align="left">2017-05-17.19-18-30</td>
 <td align="left">HelpshiftIssuesDb.sql</td>
 <td align="right">28K</td>
-<td align="left">2017-05-17.19-18-30</td>
 <td align="left">HelpshiftIssuesDb</td>
 </tr>
 <tr class="odd">
+<td align="left">2017-05-17.19-18-30</td>
 <td align="left">voicemail.db</td>
 <td align="right">28K</td>
-<td align="left">2017-05-17.19-18-30</td>
 <td align="left">voicemail</td>
 </tr>
 <tr class="even">
+<td align="left">2017-05-17.17-43-55</td>
 <td align="left">cache.db</td>
 <td align="right">20K</td>
-<td align="left">2017-05-17.17-43-55</td>
 <td align="left">cache</td>
 </tr>
 <tr class="odd">
+<td align="left">2017-05-17.17-43-55</td>
 <td align="left">HelpshiftFaqsDb.sql</td>
 <td align="right">20K</td>
-<td align="left">2017-05-17.17-43-55</td>
 <td align="left">HelpshiftFaqsDb</td>
 </tr>
 <tr class="even">
+<td align="left">2017-05-17.19-18-30</td>
 <td align="left">cache.db</td>
 <td align="right">20K</td>
-<td align="left">2017-05-17.19-18-30</td>
 <td align="left">cache</td>
 </tr>
 <tr class="odd">
+<td align="left">2017-05-17.19-18-30</td>
 <td align="left">HelpshiftFaqsDb.sql</td>
 <td align="right">20K</td>
-<td align="left">2017-05-17.19-18-30</td>
 <td align="left">HelpshiftFaqsDb</td>
 </tr>
 <tr class="even">
+<td align="left">2017-05-17.17-43-55</td>
 <td align="left">com.apple.MobileBluetooth.ledevices.other.db</td>
 <td align="right">16K</td>
-<td align="left">2017-05-17.17-43-55</td>
 <td align="left">com.apple.MobileBluetooth.ledevices.other</td>
 </tr>
 <tr class="odd">
+<td align="left">2017-05-17.17-43-55</td>
 <td align="left">com.apple.MobileBluetooth.ledevices.paired.db</td>
 <td align="right">16K</td>
-<td align="left">2017-05-17.17-43-55</td>
 <td align="left">com.apple.MobileBluetooth.ledevices.paired</td>
 </tr>
 <tr class="even">
+<td align="left">2017-05-17.17-43-55</td>
 <td align="left">TrustStore.sqlite3</td>
 <td align="right">16K</td>
-<td align="left">2017-05-17.17-43-55</td>
 <td align="left">TrustStore</td>
 </tr>
 <tr class="odd">
+<td align="left">2017-05-17.19-18-30</td>
 <td align="left">com.apple.MobileBluetooth.ledevices.other.db</td>
 <td align="right">16K</td>
-<td align="left">2017-05-17.19-18-30</td>
 <td align="left">com.apple.MobileBluetooth.ledevices.other</td>
 </tr>
 <tr class="even">
+<td align="left">2017-05-17.19-18-30</td>
 <td align="left">com.apple.MobileBluetooth.ledevices.paired.db</td>
 <td align="right">16K</td>
-<td align="left">2017-05-17.19-18-30</td>
 <td align="left">com.apple.MobileBluetooth.ledevices.paired</td>
 </tr>
 <tr class="odd">
+<td align="left">2017-05-17.19-18-30</td>
 <td align="left">TrustStore.sqlite3</td>
 <td align="right">16K</td>
-<td align="left">2017-05-17.19-18-30</td>
 <td align="left">TrustStore</td>
 </tr>
 <tr class="even">
+<td align="left">2017-05-17.17-43-55</td>
 <td align="left">StorageTracker.db</td>
 <td align="right">12K</td>
-<td align="left">2017-05-17.17-43-55</td>
 <td align="left">StorageTracker</td>
 </tr>
 <tr class="odd">
+<td align="left">2017-05-17.19-18-30</td>
 <td align="left">StorageTracker.db</td>
 <td align="right">12K</td>
-<td align="left">2017-05-17.19-18-30</td>
 <td align="left">StorageTracker</td>
 </tr>
 <tr class="even">
+<td align="left">2017-05-17.17-43-55</td>
 <td align="left">AutoFillCorrections.db</td>
 <td align="right">4K</td>
-<td align="left">2017-05-17.17-43-55</td>
 <td align="left">AutoFillCorrections</td>
 </tr>
 <tr class="odd">
+<td align="left">2017-05-17.17-43-55</td>
 <td align="left">PGCurationCache.sqlite</td>
 <td align="right">4K</td>
-<td align="left">2017-05-17.17-43-55</td>
 <td align="left">PGCurationCache</td>
 </tr>
 <tr class="even">
+<td align="left">2017-05-17.19-18-30</td>
 <td align="left">AutoFillCorrections.db</td>
 <td align="right">4K</td>
-<td align="left">2017-05-17.19-18-30</td>
 <td align="left">AutoFillCorrections</td>
 </tr>
 <tr class="odd">
+<td align="left">2017-05-17.19-18-30</td>
 <td align="left">PGCurationCache.sqlite</td>
 <td align="right">4K</td>
-<td align="left">2017-05-17.19-18-30</td>
 <td align="left">PGCurationCache</td>
 </tr>
 </tbody>

@@ -1,22 +1,31 @@
-name: "Sp00n project"
-author: "Lorenzo Gaborini"
+name: Sp00n project
+author: Lorenzo Gaborini
 navbar:
-   title: "My Website"
-   left:
-      - text: "Index"
-        href: index.html
-      - text: "Data collection"
-        href: 1_collect_data.html      
-      - text: "Health data"
-        href: 2_health_data.html
-exclude: ["data", "README.*", "Sp00n-local*", "Sp00n-data.*"]
-output_dir: "docs"
+  title: My Website
+  left:
+  - text: Index
+    href: index.html
+  - text: Data collection
+    href: 1_collect_data.html
+  - text: Health data
+    href: 2_health_data.html
+exclude:
+- data
+- README.md
+- README.html
+- Sp00n-local*
+- Sp00n-data.*
+- '*_cache'
+output_dir: docs
 output:
-   html_document:
-      theme: readable
-      df_print: kable
-      toc: yes
-      toc_float: true
+  html_document:
+    theme: readable
+    df_print: kable
+    toc: yes
+    toc_float: yes
+    lib_dir: site_libs
+    self_contained: no
+    css: assets/custom.css
+editor_options:
+  chunk_output_type: console
 
-editor_options: 
-  chunk_output_type: console      
