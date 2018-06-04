@@ -24,7 +24,7 @@ output:
   html_document:
     theme: yeti 
     df_print: kable
-    fig_width: 9
+    # fig_width: 9
     highlight: pygments
     toc: yes
     toc_float:

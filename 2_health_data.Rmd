@@ -72,10 +72,12 @@ Sleep distribution w/ type, per row:
 df.v3_sleep_data %>% 
    filter(year == 2017) %>% 
    ggplot() + 
-   geom_segment(aes(x = ID, y = datetime_start, xend = ID, yend = datetime_end, col = sleep_type), lwd = 2)
+   geom_segment(aes(x = ID, y = datetime_start, xend = ID, yend = datetime_end, col = sleep_type), lwd = 2) +
+   scale_y_datetime(date_labels = '%d/%m', date_breaks = '1 day') +
+   labs(x = 'Row ID', y = 'Date')
 ```
 
-Guess: 
+Guessing sleep types: 
 
 - `sleep_type = 5`: awake
 - `sleep_type = 2`: not awake
@@ -89,7 +91,7 @@ df.v3_sleep_data %>%
    summarize(total_duration = sum(duration_segment)) %>% 
    filter(year(datetime_day) == 2017) %>%
    ggplot() +
-   geom_col(aes(x = as.character(datetime_day), y = total_duration / dhours(1), fill = factor(sleep_type)), 
+   geom_col(aes(x = as.character(datetime_day), y = total_duration / dhours(1), fill = sleep_type), 
             position = 'dodge') +
    labs(x = 'Date', y = 'Duration [h]') + coord_cartesian(ylim = c(0, 12), expand = FALSE)
    

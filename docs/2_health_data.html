@@ -396,9 +396,11 @@ df.v3_sleep_data <span class="op">%&gt;%</span><span class="st"> </span>head</co
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">df.v3_sleep_data <span class="op">%&gt;%</span><span class="st"> </span>
 <span class="st">   </span><span class="kw">filter</span>(year <span class="op">==</span><span class="st"> </span><span class="dv">2017</span>) <span class="op">%&gt;%</span><span class="st"> </span>
 <span class="st">   </span><span class="kw">ggplot</span>() <span class="op">+</span><span class="st"> </span>
-<span class="st">   </span><span class="kw">geom_segment</span>(<span class="kw">aes</span>(<span class="dt">x =</span> ID, <span class="dt">y =</span> datetime_start, <span class="dt">xend =</span> ID, <span class="dt">yend =</span> datetime_end, <span class="dt">col =</span> sleep_type), <span class="dt">lwd =</span> <span class="dv">2</span>)</code></pre></div>
-<p><img src="2_health_data_files/figure-html/sleep-segments-1.png" width="864" /></p>
-<p>Guess:</p>
+<span class="st">   </span><span class="kw">geom_segment</span>(<span class="kw">aes</span>(<span class="dt">x =</span> ID, <span class="dt">y =</span> datetime_start, <span class="dt">xend =</span> ID, <span class="dt">yend =</span> datetime_end, <span class="dt">col =</span> sleep_type), <span class="dt">lwd =</span> <span class="dv">2</span>) <span class="op">+</span>
+<span class="st">   </span><span class="kw">scale_y_datetime</span>(<span class="dt">date_labels =</span> <span class="st">&#39;%d/%m&#39;</span>, <span class="dt">date_breaks =</span> <span class="st">&#39;1 day&#39;</span>) <span class="op">+</span>
+<span class="st">   </span><span class="kw">labs</span>(<span class="dt">x =</span> <span class="st">&#39;Row ID&#39;</span>, <span class="dt">y =</span> <span class="st">&#39;Date&#39;</span>)</code></pre></div>
+<p><img src="2_health_data_files/figure-html/sleep-segments-1.png" width="672" /></p>
+<p>Guessing sleep types:</p>
 <ul>
 <li><code>sleep_type = 5</code>: awake</li>
 <li><code>sleep_type = 2</code>: not awake</li>
@@ -410,10 +412,10 @@ df.v3_sleep_data <span class="op">%&gt;%</span><span class="st"> </span>head</co
 <span class="st">   </span><span class="kw">summarize</span>(<span class="dt">total_duration =</span> <span class="kw">sum</span>(duration_segment)) <span class="op">%&gt;%</span><span class="st"> </span>
 <span class="st">   </span><span class="kw">filter</span>(<span class="kw">year</span>(datetime_day) <span class="op">==</span><span class="st"> </span><span class="dv">2017</span>) <span class="op">%&gt;%</span>
 <span class="st">   </span><span class="kw">ggplot</span>() <span class="op">+</span>
-<span class="st">   </span><span class="kw">geom_col</span>(<span class="kw">aes</span>(<span class="dt">x =</span> <span class="kw">as.character</span>(datetime_day), <span class="dt">y =</span> total_duration <span class="op">/</span><span class="st"> </span><span class="kw">dhours</span>(<span class="dv">1</span>), <span class="dt">fill =</span> <span class="kw">factor</span>(sleep_type)), 
+<span class="st">   </span><span class="kw">geom_col</span>(<span class="kw">aes</span>(<span class="dt">x =</span> <span class="kw">as.character</span>(datetime_day), <span class="dt">y =</span> total_duration <span class="op">/</span><span class="st"> </span><span class="kw">dhours</span>(<span class="dv">1</span>), <span class="dt">fill =</span> sleep_type), 
             <span class="dt">position =</span> <span class="st">&#39;dodge&#39;</span>) <span class="op">+</span>
 <span class="st">   </span><span class="kw">labs</span>(<span class="dt">x =</span> <span class="st">&#39;Date&#39;</span>, <span class="dt">y =</span> <span class="st">&#39;Duration [h]&#39;</span>) <span class="op">+</span><span class="st"> </span><span class="kw">coord_cartesian</span>(<span class="dt">ylim =</span> <span class="kw">c</span>(<span class="dv">0</span>, <span class="dv">12</span>), <span class="dt">expand =</span> <span class="ot">FALSE</span>)</code></pre></div>
-<p><img src="2_health_data_files/figure-html/unnamed-chunk-1-1.png" width="864" /></p>
+<p><img src="2_health_data_files/figure-html/unnamed-chunk-1-1.png" width="672" /></p>
 </div>
 </div>
 <div id="prometheus" class="section level2">
@@ -448,7 +450,7 @@ df.prometheus.act.right <span class="op">%&gt;%</span><span class="st"> </span><
    <span class="dt">ignore_row_order =</span> <span class="ot">TRUE</span>, <span class="dt">ignore_col_order =</span> <span class="ot">TRUE</span>, <span class="dt">conver =</span> <span class="ot">TRUE</span>
 )
 diff.prometheus</code></pre></div>
-<pre><code>## [1] &quot;Rows in x but not y: 52, 53, 49, 51, 50. Rows in y but not x: 61, 60, 57, 58, 59. &quot;</code></pre>
+<pre><code>## [1] &quot;Rows in x but not y: 53, 52, 50, 51, 49. Rows in y but not x: 57, 59, 61, 60, 58. &quot;</code></pre>
 <p>Row differences:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># &quot;Rows in x but not y: 51, 53, 50, 52, 49. Rows in y but not x: 58, 59, 60, 57, 61. &quot;</span>
 idx.unique.left &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="dv">51</span>, <span class="dv">53</span>, <span class="dv">50</span>, <span class="dv">52</span>, <span class="dv">49</span>)
@@ -738,7 +740,7 @@ Save this:</p>
 <span class="st">   </span><span class="kw">ggplot</span>() <span class="op">+</span><span class="st"> </span>
 <span class="st">   </span><span class="kw">geom_point</span>(<span class="kw">aes</span>(<span class="dt">x =</span> datetime, <span class="dt">y =</span> <span class="kw">dseconds</span>(ZDURATION) <span class="op">/</span><span class="st"> </span><span class="kw">dminutes</span>(<span class="dv">1</span>), <span class="dt">col =</span> ZACTIVITYTYPE)) <span class="op">+</span><span class="st"> </span>
 <span class="st">   </span><span class="kw">labs</span>(<span class="dt">x =</span> <span class="st">&#39;Date&#39;</span>, <span class="dt">y =</span> <span class="st">&#39;Duration [min]&#39;</span>)</code></pre></div>
-<p><img src="2_health_data_files/figure-html/unnamed-chunk-8-1.png" width="864" /></p>
+<p><img src="2_health_data_files/figure-html/unnamed-chunk-8-1.png" width="672" /></p>
 <p>As segments:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">df.prometheus.act.left <span class="op">%&gt;%</span><span class="st"> </span>
 <span class="st">   </span><span class="kw">ggplot</span>() <span class="op">+</span>
@@ -750,7 +752,7 @@ Save this:</p>
 <span class="st">   </span><span class="kw">scale_y_datetime</span>(<span class="dt">date_labels =</span> <span class="st">&#39;%H:%M&#39;</span>, <span class="dt">limits =</span> (<span class="kw">as.POSIXct</span>(<span class="st">&#39;1970-01-01&#39;</span>, <span class="dt">tz =</span> <span class="st">&#39;GMT&#39;</span>) <span class="op">+</span><span class="st"> </span><span class="kw">ddays</span>(<span class="kw">c</span>(<span class="dv">0</span>,<span class="dv">1</span>) )), <span class="dt">expand =</span> <span class="kw">c</span>(<span class="dv">0</span>,<span class="dv">0</span>)) <span class="op">+</span>
 <span class="st">   </span><span class="kw">scale_x_date</span>(<span class="dt">date_labels =</span> <span class="st">&#39;%d/%m&#39;</span>, <span class="dt">date_breaks =</span> <span class="st">&#39;2 days&#39;</span>) <span class="op">+</span>
 <span class="st">   </span><span class="kw">labs</span>(<span class="dt">x =</span> <span class="st">&#39;Date&#39;</span>, <span class="dt">y =</span> <span class="st">&#39;Time of the day&#39;</span>)</code></pre></div>
-<p><img src="2_health_data_files/figure-html/unnamed-chunk-9-1.png" width="864" /></p>
+<p><img src="2_health_data_files/figure-html/unnamed-chunk-9-1.png" width="672" /></p>
 </div>
 <div id="binary-data" class="section level3">
 <h3>Binary data</h3>
