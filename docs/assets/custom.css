@@ -1,1 +1,10 @@
 /* Custom CSS */
+
+/* Yeti theme: larger navbar font */
+.tocify li {
+	font-size: 14px;
+}
+
+.tocify-subheader .tocify-item {
+	font-size: 1em;
+}

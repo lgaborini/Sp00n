@@ -22,7 +22,7 @@ exclude:
 output_dir: docs
 output:
   html_document:
-    theme: readable
+    theme: yeti 
     df_print: kable
     fig_width: 9
     highlight: pygments
@@ -31,7 +31,7 @@ output:
       collapsed: false
     lib_dir: site_libs
     self_contained: no
-    css: assets/custom.css
+    css: "assets/custom.css"
 editor_options:
   chunk_output_type: console
 
