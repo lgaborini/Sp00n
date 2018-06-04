@@ -363,7 +363,9 @@ df.sqlite &lt;-<span class="st"> </span>df.files <span class="op">%&gt;%</span><
 <span class="st">   </span><span class="kw">group_by</span>(filename) <span class="op">%&gt;%</span><span class="st"> </span>
 <span class="st">   </span><span class="kw">mutate</span>(<span class="dt">dbType =</span> <span class="kw">str_replace</span>(filename, <span class="kw">paste0</span>(<span class="st">&#39;(.*?)&#39;</span>, regex_sqlite), <span class="st">&#39;</span><span class="ch">\\</span><span class="st">1&#39;</span>))
 
-df.sqlite <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">select</span>(extraction, filename, size, dbType) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">arrange</span>(<span class="kw">desc</span>(size), extraction, dbType)</code></pre></div>
+df.sqlite <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">    </span><span class="kw">select</span>(extraction, filename, size, dbType) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">    </span><span class="kw">arrange</span>(<span class="kw">desc</span>(size), extraction, dbType)</code></pre></div>
 <div class="kable-table">
 <table>
 <thead>

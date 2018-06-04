@@ -223,3 +223,25 @@ df.prometheus.act.left %>%
    labs(x = 'Date', y = 'Time of the day')
 ```
 
+### Binary data
+
+Field `ZREQUESTCHANGEDVALUES` is a JSON array:
+```{r}
+df.prometheus.act.left$ZREQUESTCHANGEDVALUES[[1]]
+df.prometheus.act.left$ZREQUESTCHANGEDVALUES[[1]] %>% rawToChar()
+```
+
+Let's convert all of them:
+```{r}
+library(rjson)
+
+df.prometheus.changeset <- df.prometheus.act.left %>% 
+   mutate(json_data = map_chr(ZREQUESTCHANGEDVALUES, rawToChar)) %>% 
+   pull(json_data) %>% 
+   map_dfr(~ jsonlite::fromJSON(.x) %>% as.tibble())
+
+df.prometheus.changeset
+
+```
+
+

@@ -45,7 +45,9 @@ df.sqlite <- df.sqlite %>%
    group_by(filename) %>% 
    mutate(dbType = str_replace(filename, paste0('(.*?)', regex_sqlite), '\\1'))
 
-df.sqlite %>% select(extraction, filename, size, dbType) %>% arrange(desc(size), extraction, dbType)
+df.sqlite %>% 
+    select(extraction, filename, size, dbType) %>% 
+    arrange(desc(size), extraction, dbType)
 ```
 
 Save to data directory:
